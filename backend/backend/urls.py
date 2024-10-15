@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('authentification.urls')),  # Incluir todas las rutas de la app de authentification
+    path('api/taskmaster/', include('taskmaster.urls'))
 ]

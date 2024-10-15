@@ -19,6 +19,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -28,10 +32,13 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 #Ver detalles del usuario
-class UserDetailView(generics.RetrieveUpdateAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 #Resetear password
 @method_decorator(csrf_exempt, name='dispatch')
@@ -79,8 +86,8 @@ class PasswordResetRequestView(APIView):
             token = custom_token_generator.make_token(user)
 
             # Crear el enlace de restablecimiento de contraseña
-            reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-            reset_url = f"http://{get_current_site(request).domain}{reset_link}"
+            #reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+            reset_url = f"http://localhost:3000/password-reset-confirm/{uid}/{token}/"
 
             # Enviar el correo electrónico
             subject = 'Recuperación de contraseña'
@@ -95,8 +102,11 @@ class PasswordResetRequestView(APIView):
             #Es una alternativa por si el correo no soporta html
             correo.attach_alternative(message, "text/html")
 
-            correo.send()
-            return Response({"message": "Correo de recuperación de contraseña enviado."}, status=status.HTTP_200_OK)
+            try:
+                correo.send()
+                return Response({"message": "Correo de recuperación de contraseña enviado."}, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({"error": "No se pudo enviar el correo. Intente de nuevo más tarde."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class PasswordResetConfirmView(APIView):
@@ -110,7 +120,7 @@ class PasswordResetConfirmView(APIView):
 
 
         # Verificar si el token es válido
-        if not default_token_generator.check_token(user, token):
+        if not custom_token_generator.check_token(user, token):
             return Response({"error": "El enlace para restablecer la contraseña es inválido o ha expirado."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Si el token es válido, permitir al usuario cambiar la contraseña
@@ -120,3 +130,15 @@ class PasswordResetConfirmView(APIView):
             return Response({"message": "La contraseña ha sido restablecida con éxito."}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class LogoutView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

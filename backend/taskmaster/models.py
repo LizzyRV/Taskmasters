@@ -1,11 +1,13 @@
 from django.db import models
 from authentification.models import User
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 STATUS  = [
     ('Pendiente', 'Pendiente'),
     ('En progreso','En progreso'),
-    ('Tarea completada','Tarea completada')
+    ('Completada','Completada')
 ]
 
 
@@ -20,8 +22,12 @@ class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='categories')
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created']
+
     def __str__(self):
         return self.name
+
     
 class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
@@ -36,4 +42,14 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        # Validar que la fecha de vencimiento sea futura
+        if self.expiration_date and self.expiration_date <= timezone.now():
+            raise ValidationError("La fecha de vencimiento debe ser una fecha futura.")
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-created']
+
 

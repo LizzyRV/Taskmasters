@@ -1,0 +1,331 @@
+/* Estilos Generales */
+body {
+  background-color: #f5f5f5; /* Color de fondo de la página */
+  font-family: 'Arial', sans-serif;
+}
+
+/* Estilos para el Navbar */
+.custom-navbar  {
+  background-color: #f7f0b0; /* Caqui claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-navbar .navbar-brand {
+  color: #4bad12;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-size: 1.7em;
+  font-family: 'Roboto', sans-serif;
+}
+
+.custom-navbar .navbar-brand:hover {
+  color: #022708;
+  text-decoration: none;
+}
+
+.custom-navbar .custom-logo {
+  width: 80px; /* Tamaño más grande para la imagen */
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Efecto 3D */
+  margin-right: 10px;
+}
+
+.custom-navbar .custom-nav-link {
+  color: #333;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  padding: 5px;
+  border-radius: 50%; /* Hacer el hover redondo */
+  font-size: 1.2em;
+  font-family: 'Roboto', sans-serif;
+}
+
+.custom-navbar .custom-nav-link:hover {
+  color: #000;
+  background-color: #ffffff; /* Fondo blanco al hacer hover */
+}
+
+.custom-navbar .custom-navbar-text {
+  color: #333131;
+}
+
+.custom-navbar .logout {
+  color: #c82333; /* Rojo para dar una pista de logout */
+  font-size: 1.2em;
+  font-family: 'Roboto', sans-serif;
+}
+
+.custom-navbar .logout:hover {
+  color: #110708;
+}
+
+/* Estilos Comunes para Formularios (Login, Registro, Recuperación, Crear Tarea) */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  max-width: 900px;
+  margin: 5% auto;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  background-color: #ffffff; /* Fondo blanco */
+}
+
+.form {
+  flex: 1;
+  padding: 40px;
+}
+
+.form h2 {
+  font-size: 28px;
+  color: #333;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form label {
+  font-weight: bold;
+  color: #555;
+}
+
+.form .form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+}
+
+.form .form-control:focus {
+  border-color: #28a745; /* Verde que resalta */
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+/* Estilo del Botón (unificado) */
+.btn-primary,
+.btn-secondary,
+.form .btn-primary,
+.form .btn-secondary,
+.dashboard .btn-primary,
+.dashboard .btn-secondary {
+  background-color: #28a745 !important; /* Verde principal */
+  border-color: #28a745 !important;
+  border-radius: 8px ;
+  padding: 10px 20px ;
+  font-size: 18px ;
+  color: #fff !important; /* Texto blanco */
+  transition: background-color 0.3s ease, transform 0.2s ease !important;;
+  font-weight: bold;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.form .btn-primary:hover,
+.form .btn-secondary:hover,
+.dashboard .btn-primary:hover,
+.dashboard .btn-secondary:hover {
+  background-color: #218838 !important; /* Verde más oscuro al pasar el cursor */
+  transform: translateY(-3px) !important; /* Efecto de elevación */
+}
+
+/* Estilos específicos para CreateTask */
+.create-task-container {
+  background-color: #ffffff; /* Fondo blanco */
+  width: 100%; /* Abarcar toda la página */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+/* Tabla de CreateTask */
+.create-task-table {
+  margin-top: 30px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.create-task-table th,
+.create-task-table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.create-task-table .btn-warning,
+.create-task-table .btn-danger {
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.create-task-table .btn-warning:hover {
+  background-color: #ffc107; /* Color de advertencia más claro al pasar el cursor */
+}
+
+.create-task-table .btn-danger:hover {
+  background-color: #dc3545; /* Color de peligro más oscuro al pasar el cursor */
+}
+
+/* Opciones extras debajo del formulario (enlaces de recuperación o registro) */
+.extra-options p {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.extra-options a {
+  color: #007bff; /* Color de los enlaces */
+  text-decoration: none;
+}
+
+.extra-options a:hover {
+  text-decoration: underline;
+}
+
+/* Estilo específico para la imagen del formulario de login */
+.login-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-image img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Estilos para el Dashboard */
+.dashboard {
+  background-color: #f8f9fa; /* Fondo gris claro */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.dashboard h2 {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dashboard p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* Estilos Kanban */
+/* Estilos para el Tablero Kanban */
+.kanban-board {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  overflow-x: auto;
+  background-color: #f5f5f5; /* Fondo suave */
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-column {
+  background-color: #ffffff;
+  border-radius: 12px;
+  min-width: 300px;
+  padding: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.kanban-column h3 {
+  text-align: center;
+  color: #4bad12; /* Verde que coincide con el estilo del sitio */
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.kanban-task {
+  background-color: #e9f5e9; /* Fondo verde claro */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.kanban-task:hover {
+  background-color: #d0e9d0; /* Cambio de color al pasar el cursor */
+  transform: translateY(-3px); /* Efecto de elevación */
+}
+
+.kanban-task h5 {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.kanban-task p {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.task-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-actions .btn-info,
+.task-actions .btn-success,
+.task-actions .btn-warning {
+  font-size: 0.8em;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.task-actions .btn-info:hover {
+  background-color: #17a2b8;
+}
+
+.task-actions .btn-success:hover {
+  background-color: #218838;
+}
+
+.task-actions .btn-warning:hover {
+  background-color: #ffc107;
+}
+
+/* Estilo del Modal para editar tareas */
+.modal-header {
+  background-color: #4bad12;
+  color: #fff;
+}
+
+.modal-footer .btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+  transition: background-color 0.3s ease;
+}
+
+.modal-footer .btn-primary:hover {
+  background-color: #218838;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #5a6268;
+}

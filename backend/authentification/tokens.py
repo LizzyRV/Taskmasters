@@ -1,10 +1,18 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from datetime import timedelta
 from django.utils import timezone
+from django.utils.http import int_to_base36
 
 class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
-    def _check_token(self, user, token, timestamp):
-        # Permitir que el token sea válido por más de 24 horas
-        return super()._check_token(user, token, timestamp) and timezone.now() <= timestamp + timedelta(days=3)
+    def _make_hash_value(self, user, timestamp):
+        # Personalizar el valor del hash, incluyendo una extensión del tiempo de validez
+        return (
+            str(user.pk) + str(timestamp) + str(user.is_active)
+        )
+
+    def is_token_valid_for_user(self, user, timestamp):
+        # Método personalizado para extender la validez a 3 días
+        token_time = timezone.now() - timedelta(days=3)
+        return timestamp >= int_to_base36(token_time)
 
 custom_token_generator = CustomPasswordResetTokenGenerator()
