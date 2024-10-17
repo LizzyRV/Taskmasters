@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios2 from '../services/axios2';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
-import '../styles/styles.css'; // Asegúrate de importar el archivo de estilos CSS
+import '../styles/styles.css'; 
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');

@@ -11,7 +11,6 @@ class CategoryListCreateView(generics.ListCreateAPIView):
         return Category.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        #Asignar la categoría al usuario autenticado
         serializer.save(user=self.request.user)
 
 

@@ -19,7 +19,6 @@ const Profile = () => {
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
 
   useEffect(() => {
-    // Obtener la información del usuario
     const fetchUserInfo = async () => {
       try {
         const response = await axios2.get('profile/');
@@ -31,7 +30,6 @@ const Profile = () => {
     fetchUserInfo();
   }, []);
 
-  // Desplazar hacia arriba cuando el mensaje cambia
   useEffect(() => {
     if (message || errorMessage) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -72,15 +70,14 @@ const Profile = () => {
     e.preventDefault();
     setIsLoadingPassword(true);
 
-    // Verificar si la nueva contraseña tiene la longitud mínima requerida
     if (passwordData.new_password.length < 6) {
       setErrorMessage('La nueva contraseña debe tener al menos 6 caracteres.');
       setIsLoadingPassword(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Desplazar hacia arriba
+      window.scrollTo({ top: 0, behavior: 'smooth' }); //Desplazar hacia arriba cuando sale el mensaje
       return;
     }
 
-    // Cambiar la contraseña del usuario
+    
     try {
       await axios2.put('change-password/', passwordData);
       setMessage('Contraseña actualizada con éxito.');
@@ -89,11 +86,10 @@ const Profile = () => {
         old_password: '',
         new_password: '',
       });
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Desplazar hacia arriba
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error al actualizar la contraseña', error);
       if (error.response && error.response.data) {
-        // Mostrar el mensaje específico del error recibido del servidor
         const serverErrorMessage = error.response.data.detail || 'Error al actualizar la contraseña.';
         setErrorMessage(serverErrorMessage);
       } else {
@@ -108,21 +104,19 @@ const Profile = () => {
     <Container className="mt-4" style={{ maxWidth: '600px' }}>
       <h2 className="text-center">Perfil de Usuario</h2>
 
-      {/* Mensaje de éxito */}
       {message && (
         <Alert variant="success" className="mt-3">
           {message}
         </Alert>
       )}
 
-      {/* Mensaje de error */}
+  
       {errorMessage && (
         <Alert variant="danger" className="mt-3">
           {errorMessage}
         </Alert>
       )}
 
-      {/* Formulario para actualizar la información del usuario */}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formNombre" className="mb-3">
           <Form.Label>Nombre</Form.Label>
@@ -168,7 +162,7 @@ const Profile = () => {
         </Button>
       </Form>
 
-      {/* Formulario para cambiar la contraseña */}
+      {/*Formulario para cambiar la contraseña*/}
       <h3 className="mt-5 text-center">Cambiar Contraseña</h3>
       <Form onSubmit={handlePasswordSubmit}>
         <Form.Group controlId="formOldPassword" className="mb-3">

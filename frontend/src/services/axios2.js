@@ -4,7 +4,6 @@ const axios2 = axios.create({
   baseURL: 'http://localhost:8000/api/',
 });
 
-// Interceptor para adjuntar el token de acceso en cada solicitud
 axios2.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -18,7 +17,6 @@ axios2.interceptors.request.use(
   }
 );
 
-// Interceptor para manejar errores de respuesta
 axios2.interceptors.response.use(
   (response) => {
     return response;
@@ -31,7 +29,7 @@ axios2.interceptors.response.use(
         const refreshToken = localStorage.getItem('refresh_token');
         const response = await axios2.post('token/refresh/', { refresh: refreshToken });
         localStorage.setItem('access_token', response.data.access);
-        // Actualizar el header de autorización para futuras solicitudes
+  
         axios2.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
         return axios2(originalRequest);
       } catch (refreshError) {

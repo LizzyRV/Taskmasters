@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios2 from '../services/axios2';
-import { Container, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import '../styles/styles.css';
 
 const KanbanBoard = () => {
@@ -9,6 +9,8 @@ const KanbanBoard = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [filterCategory, setFilterCategory] = useState('');
+  const [filterStartDate, setFilterStartDate] = useState('');
+  const [filterEndDate, setFilterEndDate] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -18,7 +20,6 @@ const KanbanBoard = () => {
     category: '',
   });
 
-  // Obtener la lista de tareas
   const fetchTasks = async () => {
     try {
       const response = await axios2.get('taskmaster/tasks/');
@@ -28,7 +29,6 @@ const KanbanBoard = () => {
     }
   };
 
-  // Obtener la lista de categorías
   const fetchCategories = async () => {
     try {
       const response = await axios2.get('taskmaster/categories/');
@@ -47,7 +47,7 @@ const KanbanBoard = () => {
     setSelectedTask(task);
     
     const expirationDate = task.expiration_date
-      ? task.expiration_date.substring(0, 16) // Asegurar que se use el formato "YYYY-MM-DDThh:mm"
+      ? task.expiration_date.substring(0, 16)
       : '';
   
     setFormData({
@@ -79,7 +79,7 @@ const KanbanBoard = () => {
       await axios2.put(`taskmaster/tasks/${selectedTask.id}/`, formData);
       setTasks(tasks.map(task => (task.id === selectedTask.id ? { ...task, ...formData } : task)));
       setShowModal(false);
-      fetchTasks(); // Actualizar las tareas después de guardar los cambios
+      fetchTasks();
     } catch (error) {
       console.error('Error al actualizar la tarea', error);
     }
@@ -89,25 +89,35 @@ const KanbanBoard = () => {
     try {
       await axios2.put(`taskmaster/tasks/${task.id}/`, { ...task, status: newStatus });
       setTasks(tasks.map(t => (t.id === task.id ? { ...t, status: newStatus } : t)));
-      fetchTasks(); // Actualizar las tareas después de cambiar el estado
+      fetchTasks(); 
     } catch (error) {
       console.error('Error al cambiar el estado de la tarea', error);
     }
   };
 
-  // Filtrar tareas según la categoría seleccionada
-  const tasksByCategory = () => {
+  //Filtrar tareas según la categoría seleccionada y el rango de fechas
+  const tasksByCategoryAndDate = () => {
     return tasks.filter((task) => {
-      return filterCategory ? task.category === parseInt(filterCategory) : true;
+      const matchesCategory = filterCategory ? task.category === parseInt(filterCategory) : true;
+      const matchesStartDate = filterStartDate ? new Date(task.expiration_date) >= new Date(filterStartDate) : true;
+      const matchesEndDate = filterEndDate ? new Date(task.expiration_date) <= new Date(filterEndDate) : true;
+      return matchesCategory && matchesStartDate && matchesEndDate;
     });
   };
 
-  // Manejar el cambio de filtro de categoría
   const handleFilterCategoryChange = (e) => {
     setFilterCategory(e.target.value);
   };
 
-  // Mostrar prioridad legible en lugar de las abreviaturas
+ 
+  const handleFilterStartDateChange = (e) => {
+    setFilterStartDate(e.target.value);
+  };
+
+  const handleFilterEndDateChange = (e) => {
+    setFilterEndDate(e.target.value);
+  };
+
   const getPriorityDisplay = (priority) => {
     switch (priority) {
       case 'P':
@@ -125,32 +135,54 @@ const KanbanBoard = () => {
     <Container className="mt-4">
       <h2 className="text-center">Tablero Kanban</h2>
       
-      {/* Filtro de Categoría */}
-      <Form.Group controlId="formFilterCategory" className="mb-3">
-        <Form.Label>Filtrar por Categoría</Form.Label>
-        <Form.Select value={filterCategory} onChange={handleFilterCategoryChange}>
-          <option value="">Todas</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
+      {/*Filtro de Categoría y Fecha*/}
+      <Row className="mb-3">
+        <Col md={4}>
+          <Form.Group controlId="formFilterCategory">
+            <Form.Label>Filtrar por Categoría</Form.Label>
+            <Form.Select value={filterCategory} onChange={handleFilterCategoryChange}>
+              <option value="">Todas</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col md={4}>
+          <Form.Group controlId="formFilterStartDate">
+            <Form.Label>Filtrar por Fecha de Vencimiento (Desde)</Form.Label>
+            <Form.Control
+              type="date"
+              value={filterStartDate}
+              onChange={handleFilterStartDateChange}
+            />
+          </Form.Group>
+        </Col>
+        <Col md={4}>
+          <Form.Group controlId="formFilterEndDate">
+            <Form.Label>Filtrar por Fecha de Vencimiento (Hasta)</Form.Label>
+            <Form.Control
+              type="date"
+              value={filterEndDate}
+              onChange={handleFilterEndDateChange}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
 
-      {/* Tablero Kanban */}
+      {/*Tableroo Kanban*/}
       <div className="kanban-board">
         {['Pendiente', 'En progreso', 'Completada'].map((status) => (
           <div key={status} className="kanban-column">
             <h3>{status}</h3>
-            {tasksByCategory().filter(task => task.status === status).map((task) => (
+            {tasksByCategoryAndDate().filter(task => task.status === status).map((task) => (
               <div key={task.id} className="kanban-task">
-                <h5 style={{ textAlign: 'center' }}>{task.name} </h5>
-
-                
-                <p><strong>Descripción: </strong> {task.description}</p>
+                <h5 style={{ textAlign: 'center' }}>{task.name}</h5>
+                <p><strong>Descripción:</strong> {task.description}</p>
                 <p><strong>Vencimiento:</strong> {task.expiration_date}</p>
-                <p><strong>Creado en:</strong> {task.created}</p>
+                <p><strong>Creado:</strong> {task.created}</p>
                 <p><strong>Prioridad:</strong> {getPriorityDisplay(task.priority)}</p>
                 <p><strong>Categoría:</strong> {categories.find((category) => category.id === task.category)?.name || 'Sin categoría'}</p>
                 <div className="task-actions">
@@ -184,7 +216,6 @@ const KanbanBoard = () => {
         ))}
       </div>
 
-      {/* Modal para ver/editar tarea */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Ver/Editar Tarea</Modal.Title>

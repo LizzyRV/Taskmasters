@@ -82,7 +82,7 @@ const CreateTask = () => {
       });
       setEditMode(false);
       setTaskIdToEdit(null);
-      await fetchTasks(); // Asegúrate de que las tareas se actualicen después de crear o editar una tarea
+      await fetchTasks();
     } catch (error) {
       console.error('Error al crear/actualizar la tarea', error);
       setMessage('Hubo un problema al crear/actualizar la tarea. Inténtalo de nuevo.');
@@ -96,16 +96,15 @@ const CreateTask = () => {
   
 
   const handleEdit = (task) => {
-    // Convertir la fecha a un formato compatible con `datetime-local`
     let expirationDate = task.expiration_date;
     if (expirationDate) {
-      expirationDate = expirationDate.split('Z')[0]; // Remueve la 'Z' al final si existe.
+      expirationDate = expirationDate.split('Z')[0];
     }
   
     setFormData({
       name: task.name,
       description: task.description,
-      expiration_date: expirationDate, // Asigna la fecha en el formato compatible
+      expiration_date: expirationDate, 
       priority: task.priority,
       category: task.category,
     });
@@ -123,7 +122,7 @@ const CreateTask = () => {
       setMessage('Tarea eliminada con éxito.');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setIsSuccess(true);
-      await fetchTasks(); // Asegúrate de que las tareas se actualicen después de eliminar una tarea
+      await fetchTasks();
     } catch (error) {
       console.error('Error al eliminar la tarea', error);
       setMessage('Hubo un problema al eliminar la tarea. Inténtalo de nuevo.');
@@ -304,10 +303,10 @@ const CreateTask = () => {
               <td>{task.status}</td>
               <td>{categories.find((category) => category.id === task.category)?.name || 'Sin categoría'}</td>
               <td>
-                <Button variant="warning" className="me-2" onClick={() => handleEdit(task)}>
+                <Button size="sm" style={{ backgroundColor: '#90ee90', borderColor: '#90ee90' }} className="me-2" onClick={() => handleEdit(task)}>
                   Editar
                 </Button>
-                <Button variant="danger" onClick={() => handleDelete(task.id)}>
+                <Button size="sm" style={{ backgroundColor: '#90ee90', borderColor: '#90ee90' }} onClick={() => handleDelete(task.id)}>
                   Eliminar
                 </Button>
               </td>

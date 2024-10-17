@@ -7,17 +7,16 @@ import taskMasterLogo from '../../assets/taskmaster.jpeg';
 const Navbarr = () => {
   const navigate = useNavigate();
 
-  // Verificar si el usuario está autenticado
+  //Autenticacion
   const isAuthenticated = !!localStorage.getItem('access_token');
 
-  // Información del usuario
+
   const [user, setUser] = useState({ nombre: '', apellido: '', username: '' });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (isAuthenticated) {
         try {
-          // Solicitud para obtener la información del usuario
           const response = await axios2.get('profile/');
           setUser(response.data);
         } catch (error) {
@@ -31,14 +30,13 @@ const Navbarr = () => {
   const handleLogout = async () => {
     try {
       const refresh_token = localStorage.getItem('refresh_token');
-      // Realizar la solicitud de logout utilizando axios2 y refresh_token
       await axios2.post('logout/', { refresh_token });
     } catch (error) {
       console.error('Error al cerrar sesión', error);
     } finally {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
-      navigate('/login', { replace: true }); // Redirige al usuario a la página de inicio de sesión y previene el regreso con el botón atrás
+      navigate('/login', { replace: true }); //Redirigir al usuario a la página de inicio de sesión, no puede volver atrás
     }
   };
 
@@ -58,12 +56,12 @@ const Navbarr = () => {
           <Nav className="me-auto">
             {isAuthenticated ? (
               <>
-                <Nav.Link as={Link} to="/tasks/create" className="custom-nav-link">Crear Tarea</Nav.Link>
-                <Nav.Link as={Link} to="/kanban" className="custom-nav-link">Visualiza tus tareas</Nav.Link>
+                <Nav.Link as={Link} to="/tasks/create" className="custom-nav-link">Gestionar tareas</Nav.Link>
+                <Nav.Link as={Link} to="/kanban" className="custom-nav-link">Visualizar tareas</Nav.Link>
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login" className="custom-nav-link">Login</Nav.Link>
+                <Nav.Link as={Link} to="/login" className="custom-nav-link">Iniciar sesión</Nav.Link>
               </>
             )}
           </Nav>

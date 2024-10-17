@@ -16,14 +16,12 @@ const PasswordResetConfirm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validar que ambas contraseñas tengan al menos 6 caracteres
     if (newPassword.length < 6 || confirmPassword.length < 6) {
       setMessage('Las contraseñas deben tener al menos 6 caracteres.');
       setIsLoading(false);
       return;
     }
 
-    // Validar que las contraseñas coincidan
     if (newPassword !== confirmPassword) {
       setMessage('Las contraseñas no coinciden.');
       setIsLoading(false);
@@ -31,17 +29,16 @@ const PasswordResetConfirm = () => {
     }
 
     try {
-      // Enviar la solicitud al servidor
+
       await axios2.post(`password-reset-confirm/${uidb64}/${token}/`, {
         new_password: newPassword,
         confirm_password: confirmPassword,
       });
 
-      // Mostrar mensaje de éxito
       setMessage('Contraseña restablecida con éxito');
       setIsSuccess(true);
 
-      // Redirigir al login después de un pequeño retraso para mostrar el mensaje
+
       setTimeout(() => {
         navigate('/login');
       }, 2000);

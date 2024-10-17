@@ -44,9 +44,6 @@ class Task(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        # Validar que la fecha de vencimiento sea futura
-        if self.expiration_date and self.expiration_date <= timezone.now():
-            raise ValidationError("La fecha de vencimiento debe ser una fecha futura.")
         super().save(*args, **kwargs)
 
     class Meta:

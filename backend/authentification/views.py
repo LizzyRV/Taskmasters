@@ -13,7 +13,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.urls import reverse
-from .tokens import custom_token_generator  # Token personalizado
+from .tokens import custom_token_generator  
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
@@ -112,7 +112,6 @@ class PasswordResetRequestView(APIView):
 class PasswordResetConfirmView(APIView):
     def post(self, request, uidb64, token):
         try:
-            # Decodificar el UID del usuario
             uid = urlsafe_base64_decode(uidb64).decode()
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
@@ -123,7 +122,7 @@ class PasswordResetConfirmView(APIView):
         if not custom_token_generator.check_token(user, token):
             return Response({"error": "El enlace para restablecer la contraseña es inválido o ha expirado."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Si el token es válido, permitir al usuario cambiar la contraseña
+        #Si el token es válido, permitir al usuario cambiar la contraseña
         serializer = SetNewPasswordSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)

@@ -28,10 +28,10 @@ const Register = () => {
     try {
       await axios2.post('register/', formData);
       setMessage('Registro exitoso. Ahora puedes iniciar sesión.');
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Desplazar hacia arriba
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setTimeout(() => {
         navigate('/login');
-      }, 3000); // Esperar 3 segundos antes de redirigir
+      }, 1000); 
     } catch (error) {
       console.error('Error en el registro', error);
       setMessage('Hubo un problema con el registro. Por favor, inténtalo de nuevo.');
@@ -40,7 +40,6 @@ const Register = () => {
     }
   };
 
-  // Desplazar hacia arriba cuando el mensaje cambia
   useEffect(() => {
     if (message) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
