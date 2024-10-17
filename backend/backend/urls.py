@@ -22,5 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('authentification.urls')),  # Incluir todas las rutas de la app de authentification
     path('api/taskmaster/', include('taskmaster.urls')),
-    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
 ]
