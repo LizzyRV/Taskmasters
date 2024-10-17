@@ -1,18 +1,16 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from datetime import timedelta
 from django.utils import timezone
-from django.utils.http import int_to_base36
 
 class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
-
-        return (
-            str(user.pk) + str(timestamp) + str(user.is_active)
-        )
+        # Genera un valor hash que incluya el ID del usuario, el timestamp, y si el usuario está activo.
+        return f"{user.pk}{timestamp}{user.is_active}"
 
     def is_token_valid_for_user(self, user, timestamp):
-   
-        token_time = timezone.now() - timedelta(days=3)
-        return timestamp >= int_to_base36(token_time)
+        # Verificar si el token aún es válido comparándolo con el límite de tiempo.
+        # Establecemos un período de validez de 3 días para el token.
+        token_valid_until = timestamp + timedelta(days=3)
+        return timezone.now() <= token_valid_until
 
 custom_token_generator = CustomPasswordResetTokenGenerator()
