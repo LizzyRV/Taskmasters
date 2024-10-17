@@ -87,7 +87,8 @@ class PasswordResetRequestView(APIView):
 
             # Crear el enlace de restablecimiento de contraseña
             #reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-            reset_url = f"http://localhost:3000/password-reset-confirm/{uid}/{token}/"
+            reset_url = f"https://taskmasters-1.onrender.com/password-reset-confirm/{uid}/{token}/"
+
 
             # Enviar el correo electrónico
             subject = 'Recuperación de contraseña'
