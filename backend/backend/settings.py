@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 # Configuración de CORS
 CORS_ALLOWED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
+    'https://taskmasters-1.onrender.com',  # Asegúrate de agregar el dominio del frontend
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 ]
@@ -56,6 +57,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
+    'https://taskmasters-1.onrender.com',
     'http://localhost:8000',
     'http://127.0.0.1:8000'
 ]
