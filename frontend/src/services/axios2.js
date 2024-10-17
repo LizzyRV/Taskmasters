@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axios2 = axios.create({
-  baseURL: 'https://<tu-backend-en-render>.onrender.com/api/',
+  baseURL: 'https://taskmasters-f3b4.onrender.com/api/', // Cambiado a la URL de tu backend en Render
 });
 
 axios2.interceptors.request.use(
