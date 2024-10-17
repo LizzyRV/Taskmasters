@@ -12,7 +12,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pc4so%9@(lw)^r!xa(pa6vg54gu#et@yr4jh+9ri@xl&949hav'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-pc4so%9@(lw)^r!xa(pa6vg54gu#et@yr4jh+9ri@xl&949hav')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 # Configuración de CORS
 CORS_ALLOWED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
+    'https://taskmasters-1.onrender.com',  # Asegúrate de agregar el dominio del frontend
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 ]
@@ -51,12 +52,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'elivar9403@gmail.com'  # Tu correo aquí
-EMAIL_HOST_PASSWORD = 'tlvz kmvr sssi hxjb'  # La contraseña especial de aplicación
+EMAIL_HOST_USER = 'elivar9403@gmail.com'  # Utiliza el correo ya configurado
+EMAIL_HOST_PASSWORD = 'tlvz kmvr sssi hxjb'  # Utiliza la contraseña de aplicación configurada
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
+    'https://taskmasters-1.onrender.com',
     'http://localhost:8000',
     'http://127.0.0.1:8000'
 ]
