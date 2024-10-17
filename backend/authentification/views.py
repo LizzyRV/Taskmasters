@@ -114,23 +114,33 @@ class PasswordResetRequestView(APIView):
 
 class PasswordResetConfirmView(APIView):
     def post(self, request, uidb64, token):
+        # Añadir print para verificar la solicitud y los valores
+        print("Request received in PasswordResetConfirmView")
+        print(f"UID: {uidb64}, Token: {token}")
+
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             user = User.objects.get(pk=uid)
+            print(f"User found for uid: {user}")  
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            print("User not found or link invalid")  
             return Response({"error": "Enlace inválido."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Verificar si el token es válido
+
         if not custom_token_generator.check_token(user, token):
+            print("Token inválido o expirado")
             return Response({"error": "El enlace para restablecer la contraseña es inválido o ha expirado."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Si el token es válido, permitir al usuario cambiar la contraseña
         serializer = SetNewPasswordSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
+            print("Contraseña restablecida con éxito")
             return Response({"message": "La contraseña ha sido restablecida con éxito."}, status=status.HTTP_200_OK)
         
+        print("Error en el serializer", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
     
 class LogoutView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
