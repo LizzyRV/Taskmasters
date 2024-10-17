@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios2 from '../services/axios2';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
-import '../styles/styles.css'; 
+import '../styles/styles.css';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -14,13 +14,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null); // Reiniciar el estado de error cada vez que intentas loguearte
-
-    if (username.trim() === '' || password.trim() === '') {
-      setError('Por favor, llena todos los campos.');
-      setIsLoading(false);
-      return;
-    }
+    setError(null);
 
     try {
       const response = await axios2.post('token/', { username, password });
@@ -29,13 +23,14 @@ const LoginForm = () => {
       navigate('/dashboard');
     } catch (err) {
       if (err.response) {
-        if (err.response.status === 401) {
+
+        if (err.response.status === 401 || err.response.status === 400) {
           setError('Credenciales incorrectas. Inténtalo de nuevo.');
         } else {
           setError('Hubo un problema al intentar iniciar sesión. Inténtalo más tarde.');
         }
       } else {
-        setError('Error de red. No se pudo conectar con el servidor.');
+        setError('No se pudo conectar con el servidor. Verifica tu conexión a Internet.');
       }
     } finally {
       setIsLoading(false);
