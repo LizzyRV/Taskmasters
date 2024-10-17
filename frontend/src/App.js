@@ -26,16 +26,17 @@ function App() {
       <Layout>
         <Routes>
 
+          {/* Ruta para redirigir al dashboard */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-      
+          {/* Rutas públicas */}
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<Register />} />
           <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} />
           <Route path="/password-reset-confirm/:uidb64/:token" element={<PasswordResetConfirm />} />
 
-    
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Rutas protegidas */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/tasks/create" element={<ProtectedRoute><CreateTask /></ProtectedRoute>} />
           <Route path="/kanban" element={<ProtectedRoute><KanbanBoard /></ProtectedRoute>} />
