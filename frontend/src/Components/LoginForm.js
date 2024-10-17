@@ -22,15 +22,11 @@ const LoginForm = () => {
       localStorage.setItem('refresh_token', response.data.refresh);
       navigate('/dashboard');
     } catch (err) {
-      if (err.response) {
-        // Manejar errores con un mensaje específico del servidor
-        if (err.response.status === 401 || err.response.status === 400) {
-          setError('Credenciales incorrectas. Inténtalo de nuevo.');
-        } else if (err.response.status === 404) {
-          setError('Recurso no encontrado. Inténtalo más tarde.');
-        } else {
-          setError('Hubo un problema al intentar iniciar sesión. Inténtalo más tarde.');
-        }
+      if (err.message === 'Credenciales incorrectas') {
+        setError('Credenciales incorrectas. Inténtalo de nuevo.');
+      } else if (err.response) {
+        // Manejar otros errores del servidor
+        setError('Hubo un problema al intentar iniciar sesión. Inténtalo más tarde.');
       } else {
         setError('No se pudo conectar con el servidor. Verifica tu conexión a Internet.');
       }

@@ -24,7 +24,14 @@ axios2.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Manejo de error 401 (no autorizado) y refresco del token
+    // Manejar específicamente el error de login (401 Unauthorized)
+    if (error.response && error.response.status === 401 && originalRequest.url === 'token/' && !originalRequest._retry) {
+      originalRequest._retry = true;
+      console.error('Credenciales incorrectas. Inténtalo de nuevo.');
+      return Promise.reject({ message: 'Credenciales incorrectas', ...error });
+    }
+
+    // Manejar 401 para otras solicitudes (refrescar token)
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
@@ -47,12 +54,6 @@ axios2.interceptors.response.use(
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';
       }
-    } else if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-      // Si es un error de autenticación o página no encontrada, limpiar tokens y redirigir al login
-      console.error('Error de autenticación o recurso no encontrado.');
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      window.location.href = '/login';
     }
 
     return Promise.reject(error);
