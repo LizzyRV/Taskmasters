@@ -14,7 +14,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
+    setError(null); // Limpiar errores anteriores
 
     try {
       const response = await axios2.post('token/', { username, password });
@@ -23,9 +23,11 @@ const LoginForm = () => {
       navigate('/dashboard');
     } catch (err) {
       if (err.response) {
-
+        // Manejar errores con un mensaje específico del servidor
         if (err.response.status === 401 || err.response.status === 400) {
           setError('Credenciales incorrectas. Inténtalo de nuevo.');
+        } else if (err.response.status === 404) {
+          setError('Recurso no encontrado. Inténtalo más tarde.');
         } else {
           setError('Hubo un problema al intentar iniciar sesión. Inténtalo más tarde.');
         }
