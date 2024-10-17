@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'taskmaster',
 ]
 
-# Configuración de CORS (para permitir que el frontend acceda al backend)
+
 CORS_ALLOWED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
     'https://taskmasters-1.onrender.com',
@@ -45,18 +45,18 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Se le pone el nombre de la aplicación de autenticacion y bajo cuál modelo lo hará
+
 AUTH_USER_MODEL = 'authentification.User'
 
-# Configuración SMTP (envío de correos electrónicos)
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'elivar9403@gmail.com'  # Puedes cambiar esto si necesitas moverlo a un entorno seguro
+EMAIL_HOST_USER = 'elivar9403@gmail.com'  
 EMAIL_HOST_PASSWORD = 'tlvz kmvr sssi hxjb'
 
-# Configuración de CSRF
+
 CSRF_TRUSTED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
     'https://taskmasters-1.onrender.com',
@@ -99,7 +99,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # No tienes carpeta 'templates', así que está vacío.
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
