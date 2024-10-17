@@ -15,6 +15,7 @@ const PasswordResetConfirm = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    // Validar longitud mínima de la contraseña
     if (newPassword.length < 6) {
       setMessage('La contraseña debe tener al menos 6 caracteres.');
       setIsLoading(false);
@@ -22,17 +23,20 @@ const PasswordResetConfirm = () => {
     }
 
     try {
+      // Enviar solicitud de restablecimiento de contraseña al backend
       await axios2.post(`password-reset-confirm/${uidb64}/${token}/`, {
         new_password: newPassword,
       });
 
+      // Mostrar mensaje de éxito
       setMessage('Contraseña restablecida con éxito');
       setIsSuccess(true);
 
+      // Redirigir al usuario a la página de inicio de sesión
       setTimeout(() => {
         navigate('/login');
       }, 2000);
-
+      
     } catch (error) {
       console.error(error);
       setMessage(
