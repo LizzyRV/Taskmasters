@@ -80,7 +80,10 @@ class PasswordResetRequestView(APIView):
         serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            user = User.objects.get(email=email)
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({"error": "No existe ningún usuario con ese correo electrónico."}, status=status.HTTP_400_BAD_REQUEST)
 
             # Generar el token de restablecimiento de contraseña
             uid = urlsafe_base64_encode(force_bytes(user.pk))
