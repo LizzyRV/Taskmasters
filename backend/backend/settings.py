@@ -28,6 +28,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'taskmasters-f3b4.onrender.com', 'taskmasters-1.onrender.com']
 
+# FRONTEND URL Configuration
+FRONTEND_URL = 'https://taskmasters-1.onrender.com'
 
 # Application definition
 
@@ -48,7 +50,11 @@ INSTALLED_APPS = [
 ]
 
 #Indica que voy a permitir el origen de cors
-CORS_ORIGIN_ALLOW_ALL = True 
+CORS_ALLOWED_ORIGINS = [
+    'https://taskmasters-1.onrender.com',
+    'https://taskmasters-f3b4.onrender.com',
+]
+
 #Se le pone el nombre de la aplicación de autenticacion y bajo cuál modelo lo hará
 AUTH_USER_MODEL= 'authentification.User' 
 

@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer,PasswordResetRequestSerializer,SetNewPasswordSerializer
+from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer, PasswordResetRequestSerializer, SetNewPasswordSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import PasswordResetView
@@ -23,15 +23,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.conf import settings  # Importar settings
 
 User = get_user_model()
 
-#Registrar el usuario
+# Registrar el usuario
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-#Ver detalles del usuario
+# Ver detalles del usuario
 class UserProfileView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -40,12 +41,12 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-#Resetear password
+# Resetear password
 @method_decorator(csrf_exempt, name='dispatch')
 class CustomPasswordResetView(PasswordResetView):
     pass
 
-#Cambiar el password. Para usuarios autenticados
+# Cambiar el password. Para usuarios autenticados
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     model = User
@@ -86,9 +87,7 @@ class PasswordResetRequestView(APIView):
             token = custom_token_generator.make_token(user)
 
             # Crear el enlace de restablecimiento de contraseña
-            #reset_link = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-            reset_url = f"https://taskmasters-1.onrender.com/password-reset-confirm/{uid}/{token}/"
-
+            reset_url = f"{settings.FRONTEND_URL}/password-reset-confirm/{uid}/{token}/"
 
             # Enviar el correo electrónico
             subject = 'Recuperación de contraseña'
@@ -96,11 +95,11 @@ class PasswordResetRequestView(APIView):
                 'user': user,
                 'reset_url': reset_url,
             })
-            #Se le están enviando los tags de html
+            # Se le están enviando los tags de html
             contenido_html = strip_tags(message)
             correo = EmailMultiAlternatives(subject, contenido_html, 'noreply@myapp.com', [email])
 
-            #Es una alternativa por si el correo no soporta html
+            # Es una alternativa por si el correo no soporta html
             correo.attach_alternative(message, "text/html")
 
             try:
@@ -109,7 +108,7 @@ class PasswordResetRequestView(APIView):
             except Exception as e:
                 return Response({"error": "No se pudo enviar el correo. Intente de nuevo más tarde."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class PasswordResetConfirmView(APIView):
     def post(self, request, uidb64, token):
         try:
@@ -118,12 +117,11 @@ class PasswordResetConfirmView(APIView):
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return Response({"error": "Enlace inválido."}, status=status.HTTP_400_BAD_REQUEST)
 
-
         # Verificar si el token es válido
         if not custom_token_generator.check_token(user, token):
             return Response({"error": "El enlace para restablecer la contraseña es inválido o ha expirado."}, status=status.HTTP_400_BAD_REQUEST)
 
-        #Si el token es válido, permitir al usuario cambiar la contraseña
+        # Si el token es válido, permitir al usuario cambiar la contraseña
         serializer = SetNewPasswordSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
