@@ -48,11 +48,8 @@ class PasswordResetRequestSerializer(serializers.Serializer):
     
 class SetNewPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(write_only=True, min_length=6)
-    confirm_password = serializers.CharField(write_only=True, min_length=6)
 
     def validate(self, data):
-        if data['new_password'] != data['confirm_password']:
-            raise serializers.ValidationError("Las contraseñas no coinciden.")
         return data
 
     def save(self, user):
