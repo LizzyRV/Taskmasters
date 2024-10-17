@@ -14,16 +14,28 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null); // Reiniciar el estado de error cada vez que intentas loguearte
+
+    if (username.trim() === '' || password.trim() === '') {
+      setError('Por favor, llena todos los campos.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await axios2.post('token/', { username, password });
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
       navigate('/dashboard');
     } catch (err) {
-      if (err.response && err.response.data && err.response.data.detail) {
-        setError(err.response.data.detail);
+      if (err.response) {
+        if (err.response.status === 401) {
+          setError('Credenciales incorrectas. Inténtalo de nuevo.');
+        } else {
+          setError('Hubo un problema al intentar iniciar sesión. Inténtalo más tarde.');
+        }
       } else {
-        setError('Credenciales incorrectas. Inténtalo de nuevo.');
+        setError('Error de red. No se pudo conectar con el servidor.');
       }
     } finally {
       setIsLoading(false);
