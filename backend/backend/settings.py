@@ -1,3 +1,4 @@
+""
 """
 Django settings for backend project.
 
@@ -21,15 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pc4so%9@(lw)^r!xa(pa6vg54gu#et@yr4jh+9ri@xl&949hav'
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'taskmasters-f3b4.onrender.com', 'taskmasters-1.onrender.com']
 
 # FRONTEND URL Configuration
-FRONTEND_URL = 'https://taskmasters-1.onrender.com'
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
 
 # Application definition
 
@@ -60,41 +61,32 @@ AUTH_USER_MODEL= 'authentification.User'
 
 # Configuración SMTP (para producción o pruebas con un servicio real). Envío de correos electrónicos
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#Se programa con gmail
 EMAIL_HOST = 'smtp.gmail.com'
-#Puerto para el smtp
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'elivar9403@gmail.com'
-
-#Se debe crear contraseña de aplicaicon desde gmail y tener habilitado la doble autenticacion
-#Necesario para poder hacer el punte con gmail y poder enviar correos
-EMAIL_HOST_PASSWORD = 'tlvz kmvr sssi hxjb'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'default-email-password')
 
 # Deshabilitar CSRF para todas las vistas API
-#Evita error al momento de hacer la petición del envío del correo electrónico
 CSRF_TRUSTED_ORIGINS = ['https://taskmasters-f3b4.onrender.com', 'https://taskmasters-1.onrender.com']
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = not DEBUG
 
 # Configurar REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework_simplejwt.authentication.JWTAuthentication'
-],
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
-
-SIMPLE_JWT= {
+SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
-    #Algoritmo de encriptamiento
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -106,15 +98,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-#Evitar problemas con Csrf de django. Manejo de cookies, configurar envio de correos electrónicos
-MIDDLEWARE.remove('django.middleware.csrf.CsrfViewMiddleware') 
 
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),], #HTML para envío de correos
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],  # HTML para envío de correos
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,10 +119,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# Base de datos SQLite predeterminada
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -140,10 +127,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -159,26 +143,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+""
