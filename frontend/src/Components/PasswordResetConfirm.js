@@ -6,7 +6,6 @@ import { Container, Form, Button, Alert } from 'react-bootstrap';
 const PasswordResetConfirm = () => {
   const { uidb64, token } = useParams();
   const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -16,33 +15,24 @@ const PasswordResetConfirm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (newPassword.length < 6 || confirmPassword.length < 6) {
-      setMessage('Las contraseñas deben tener al menos 6 caracteres.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setMessage('Las contraseñas no coinciden.');
+    if (newPassword.length < 6) {
+      setMessage('La contraseña debe tener al menos 6 caracteres.');
       setIsLoading(false);
       return;
     }
 
     try {
-
       await axios2.post(`password-reset-confirm/${uidb64}/${token}/`, {
         new_password: newPassword,
-        confirm_password: confirmPassword,
       });
 
       setMessage('Contraseña restablecida con éxito');
       setIsSuccess(true);
 
-
       setTimeout(() => {
         navigate('/login');
       }, 2000);
-      
+
     } catch (error) {
       console.error(error);
       setMessage(
@@ -72,15 +62,6 @@ const PasswordResetConfirm = () => {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="confirmPassword" className="mb-3">
-            <Form.Label>Confirmar Contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </Form.Group>
