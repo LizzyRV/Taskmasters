@@ -12,12 +12,12 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-pc4so%9@(lw)^r!xa(pa6vg54gu#et@yr4jh+9ri@xl&949hav')
+SECRET_KEY = 'django-insecure-pc4so%9@(lw)^r!xa(pa6vg54gu#et@yr4jh+9ri@xl&949hav'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'taskmasters-f3b4.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'taskmasters-f3b4.onrender.com', 'taskmasters-1.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -35,32 +35,33 @@ INSTALLED_APPS = [
     'taskmaster',
 ]
 
-# Configuración de CORS
+# Configuración de CORS (para permitir que el frontend acceda al backend)
 CORS_ALLOWED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
-    'https://taskmasters-1.onrender.com',  # Asegúrate de agregar el dominio del frontend
+    'https://taskmasters-1.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
 ]
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Se le pone el nombre de la aplicación de autenticacion y bajo cuál modelo lo hará
 AUTH_USER_MODEL = 'authentification.User'
 
-# Configuración SMTP
+# Configuración SMTP (envío de correos electrónicos)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'elivar9403@gmail.com'  # Utiliza el correo ya configurado
-EMAIL_HOST_PASSWORD = 'tlvz kmvr sssi hxjb'  # Utiliza la contraseña de aplicación configurada
+EMAIL_HOST_USER = 'elivar9403@gmail.com'  # Puedes cambiar esto si necesitas moverlo a un entorno seguro
+EMAIL_HOST_PASSWORD = 'tlvz kmvr sssi hxjb'
 
-# CSRF Trusted Origins
+# Configuración de CSRF
 CSRF_TRUSTED_ORIGINS = [
     'https://taskmasters-f3b4.onrender.com',
     'https://taskmasters-1.onrender.com',
     'http://localhost:8000',
-    'http://127.0.0.1:8000'
+    'http://127.0.0.1:8000',
 ]
 
 # Configurar REST Framework
@@ -70,6 +71,7 @@ REST_FRAMEWORK = {
     ],
 }
 
+# Configuración de JWT (para autenticación)
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -80,6 +82,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+# Middleware
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -96,7 +99,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],  # No tienes carpeta 'templates', así que está vacío.
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,7 +114,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database (mantener SQLite)
+# Base de datos
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -119,7 +122,7 @@ DATABASES = {
     }
 }
 
-# Password validation
+# Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -137,16 +140,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Archivos estáticos
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
+# Configuración del campo predeterminado para las claves principales
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
